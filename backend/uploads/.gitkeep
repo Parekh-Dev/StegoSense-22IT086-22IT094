@@ -1,0 +1,2 @@
+# This file ensures the uploads directory is included in git but kept empty
+# Uploaded images are stored here temporarily but not committed to version control

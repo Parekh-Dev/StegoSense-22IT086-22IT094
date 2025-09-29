@@ -41,9 +41,25 @@ pids
 *.seed
 *.pid.lock
 
-# Uploads folder (contains user uploaded images)
-uploads/
-backend/uploads/
+# Uploaded files (keep directories but exclude all uploaded content)
+uploads/*
+!uploads/.gitkeep
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Common image formats (additional safety)
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.webp
+*.svg
+*.ico
+
+# But allow static assets in specific directories
+!frontend/public/*.svg
+!frontend/src/assets/*.svg
 
 # Temporary files
 *.tmp
