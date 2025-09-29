@@ -108,7 +108,7 @@ StegoSense/
 │   │   ├── pages/          # Page components
 │   │   └── main.jsx        # React entry point
 │   └── package.json
-└── uploads/                # User uploaded images
+└── uploads/                # User uploaded images (temporary storage)
 ```
 
 ## 🔧 API Endpoints

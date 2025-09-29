@@ -41,11 +41,9 @@ pids
 *.seed
 *.pid.lock
 
-# Uploaded files (keep directories but exclude all uploaded content)
+# Uploaded files (keep directory but exclude all uploaded content)
 uploads/*
 !uploads/.gitkeep
-backend/uploads/*
-!backend/uploads/.gitkeep
 
 # Common image formats (additional safety)
 *.jpg
