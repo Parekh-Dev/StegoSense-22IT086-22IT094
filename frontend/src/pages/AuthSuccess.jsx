@@ -18,8 +18,12 @@ const AuthSuccess = () => {
       // Get user info from token (basic decode - in production, verify the token properly)
       try {
         const payload = JSON.parse(atob(token.split('.')[1]))
-        // You might want to fetch user details from the backend instead
-        localStorage.setItem("user", JSON.stringify({ id: payload.id }))
+        // Store complete user info from JWT
+        localStorage.setItem("user", JSON.stringify({ 
+          id: payload.id, 
+          name: payload.name, 
+          email: payload.email 
+        }))
       } catch (e) {
         console.error('Error parsing token:', e)
       }

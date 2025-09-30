@@ -26,7 +26,11 @@ exports.register = async (req, res) => {
       req
     );
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ 
+      id: user._id, 
+      name: user.name, 
+      email: user.email 
+    }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
   } catch (err) {
     console.error(err);
@@ -54,7 +58,11 @@ exports.login = async (req, res) => {
       req
     );
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ 
+      id: user._id, 
+      name: user.name, 
+      email: user.email 
+    }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
   } catch (err) {
     console.error(err);
@@ -75,7 +83,11 @@ exports.googleAuthSuccess = async (req, res) => {
         req
       );
 
-      const token = jwt.sign({ id: req.user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+      const token = jwt.sign({ 
+        id: req.user._id, 
+        name: req.user.name, 
+        email: req.user.email 
+      }, process.env.JWT_SECRET, { expiresIn: '7d' });
       
       // Redirect to frontend with token
       res.redirect(`${process.env.FRONTEND_URL}/auth/success?token=${token}`);
