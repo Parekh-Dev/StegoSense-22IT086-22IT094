@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { API_ENDPOINTS } from "../config/api"
+import ConfirmationModal from "../components/ConfirmationModal"
 
 const MainApp = () => {
   const [file, setFile] = useState(null)
@@ -14,6 +15,7 @@ const MainApp = () => {
   const [error, setError] = useState("")
   const [dragActive, setDragActive] = useState(false)
   const [analysisHistory, setAnalysisHistory] = useState([])
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
   const navigate = useNavigate()
   const token = localStorage.getItem("token")
 
@@ -49,12 +51,32 @@ const MainApp = () => {
     }
   }, [result, filePreview])
 
-  const handleLogout = () => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
-    // Clear recent analyses on logout (they're session-based only)
-    setAnalysisHistory([])
-    navigate("/")
+  const handleLogout = async () => {
+    try {
+      // Call logout API to log the activity
+      const token = localStorage.getItem("token")
+      if (token) {
+        console.log('Calling logout API:', API_ENDPOINTS.AUTH.LOGOUT)
+        await axios.post(API_ENDPOINTS.AUTH.LOGOUT, {}, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        console.log('Logout API call successful')
+      }
+    } catch (err) {
+      // Continue with logout even if API call fails
+      console.log('Logout API call failed:', err.message, 'but proceeding with logout')
+    } finally {
+      // Always clear local storage and navigate
+      localStorage.removeItem("token")
+      localStorage.removeItem("user")
+      // Clear recent analyses on logout (they're session-based only)
+      setAnalysisHistory([])
+      navigate("/")
+    }
+  }
+
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true)
   }
 
   const handleFileChange = (e) => {
@@ -177,7 +199,6 @@ const MainApp = () => {
       const fileInput = document.querySelector('input[type="file"]')
       if (fileInput) fileInput.value = ""
     } catch (err) {
-      console.error(err)
       setError(err.response?.data?.msg || "Upload failed. Please try again.")
     } finally {
       setLoading(false)
@@ -222,7 +243,7 @@ const MainApp = () => {
               </button>
               <span className="text-gray-700">Welcome, {user?.name}</span>
               <button
-                onClick={handleLogout}
+                onClick={handleLogoutClick}
                 className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors duration-200"
               >
                 Logout
@@ -544,6 +565,18 @@ const MainApp = () => {
         {/* Error Display */}
         {error && <div className="mt-6 bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">{error}</div>}
       </div>
+
+      {/* Logout Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleLogout}
+        title="Confirm Logout"
+        message="Are you sure you want to logout? Any unsaved work will be lost."
+        confirmText="Logout"
+        cancelText="Stay Logged In"
+        type="warning"
+      />
     </div>
   )
 }

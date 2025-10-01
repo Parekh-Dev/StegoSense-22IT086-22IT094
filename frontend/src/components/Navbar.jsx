@@ -1,13 +1,38 @@
 "use client"
+import { useState } from "react"
 import { Link, useNavigate } from "react-router-dom"
+import axios from "axios"
+import { API_ENDPOINTS } from "../config/api"
+import ConfirmationModal from "./ConfirmationModal"
 
 const Navbar = ({ user }) => {
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
   const navigate = useNavigate()
 
-  const handleLogout = () => {
-    localStorage.removeItem("token")
-    localStorage.removeItem("user")
-    navigate("/")
+  const handleLogout = async () => {
+    try {
+      // Call logout API to log the activity
+      const token = localStorage.getItem("token")
+      if (token) {
+        console.log('Calling logout API:', API_ENDPOINTS.AUTH.LOGOUT)
+        await axios.post(API_ENDPOINTS.AUTH.LOGOUT, {}, {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+        console.log('Logout API call successful')
+      }
+    } catch (err) {
+      // Continue with logout even if API call fails
+      console.log('Logout API call failed:', err.message, 'but proceeding with logout')
+    } finally {
+      // Always clear local storage and navigate
+      localStorage.removeItem("token")
+      localStorage.removeItem("user")
+      navigate("/")
+    }
+  }
+
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true)
   }
 
   return (
@@ -32,7 +57,7 @@ const Navbar = ({ user }) => {
                   Dashboard
                 </Link>
                 <button
-                  onClick={handleLogout}
+                  onClick={handleLogoutClick}
                   className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors duration-200"
                 >
                   Logout
@@ -57,6 +82,18 @@ const Navbar = ({ user }) => {
           </div>
         </div>
       </div>
+      
+      {/* Logout Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleLogout}
+        title="Confirm Logout"
+        message="Are you sure you want to logout? You will need to sign in again to access your account."
+        confirmText="Logout"
+        cancelText="Stay Logged In"
+        type="warning"
+      />
     </nav>
   )
 }

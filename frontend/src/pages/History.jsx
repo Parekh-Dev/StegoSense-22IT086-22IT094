@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { useNavigate } from "react-router-dom"
 import axios from "axios"
 import { API_ENDPOINTS } from "../config/api"
+import ConfirmationModal from "../components/ConfirmationModal"
 
 const History = () => {
   const navigate = useNavigate()
@@ -23,6 +24,7 @@ const History = () => {
     currentPage: 1,
     totalRecords: 0
   })
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
 
   const token = localStorage.getItem("token")
   const user = JSON.parse(localStorage.getItem("user") || "{}")
@@ -111,6 +113,10 @@ const History = () => {
     navigate("/")
   }
 
+  const handleLogoutClick = () => {
+    setShowLogoutModal(true)
+  }
+
   const getActionIcon = (action) => {
     const icons = {
       LOGIN: "🔐",
@@ -181,7 +187,7 @@ const History = () => {
               </button>
               <span className="text-gray-700">Welcome, {user?.name}</span>
               <button
-                onClick={handleLogout}
+                onClick={handleLogoutClick}
                 className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-medium transition-colors duration-200"
               >
                 Logout
@@ -430,6 +436,18 @@ const History = () => {
           </div>
         </div>
       </div>
+
+      {/* Logout Confirmation Modal */}
+      <ConfirmationModal
+        isOpen={showLogoutModal}
+        onClose={() => setShowLogoutModal(false)}
+        onConfirm={handleLogout}
+        title="Confirm Logout"
+        message="Are you sure you want to logout? You will need to sign in again to access your account and history."
+        confirmText="Logout"
+        cancelText="Stay Logged In"
+        type="warning"
+      />
     </div>
   )
 }

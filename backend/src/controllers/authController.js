@@ -33,8 +33,7 @@ exports.register = async (req, res) => {
     }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Registration failed. Please try again.' });
   }
 };
 
@@ -65,8 +64,7 @@ exports.login = async (req, res) => {
     }, process.env.JWT_SECRET, { expiresIn: '7d' });
     res.json({ token, user: { id: user._id, name: user.name, email: user.email } });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Login failed. Please try again.' });
   }
 };
 
@@ -89,13 +87,25 @@ exports.googleAuthSuccess = async (req, res) => {
         email: req.user.email 
       }, process.env.JWT_SECRET, { expiresIn: '7d' });
       
+      // Environment-aware frontend URL
+      const frontendURL = process.env.NODE_ENV === 'production' 
+        ? process.env.FRONTEND_URL_PROD || "https://stegosense.vercel.app"
+        : process.env.FRONTEND_URL || "http://localhost:3000";
+      
       // Redirect to frontend with token
-      res.redirect(`${process.env.FRONTEND_URL}/auth/success?token=${token}`);
+      res.redirect(`${frontendURL}/auth/success?token=${token}`);
     } else {
-      res.redirect(`${process.env.FRONTEND_URL}/login?error=auth_failed`);
+      const frontendURL = process.env.NODE_ENV === 'production' 
+        ? process.env.FRONTEND_URL_PROD || "https://stegosense.vercel.app"
+        : process.env.FRONTEND_URL || "http://localhost:3000";
+      
+      res.redirect(`${frontendURL}/login?error=auth_failed`);
     }
   } catch (err) {
-    console.error('Google auth success error:', err);
-    res.redirect(`${process.env.FRONTEND_URL}/login?error=server_error`);
+    const frontendURL = process.env.NODE_ENV === 'production' 
+      ? process.env.FRONTEND_URL_PROD || "https://stegosense.vercel.app"
+      : process.env.FRONTEND_URL || "http://localhost:3000";
+    
+    res.redirect(`${frontendURL}/login?error=server_error`);
   }
 };

@@ -1,5 +1,5 @@
 # Frontend Dockerfile
-FROM node:20-alpine
+FROM node:22-alpine
 
 WORKDIR /app
 
@@ -16,7 +16,7 @@ COPY . .
 RUN npm run build
 
 # Use nginx to serve the built files
-FROM nginx:alpine
+FROM nginx:1.25-alpine
 
 # Copy custom nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf

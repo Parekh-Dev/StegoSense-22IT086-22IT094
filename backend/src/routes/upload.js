@@ -7,7 +7,7 @@ const { logHistory } = require('../controllers/historyController');
 // Set storage engine
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '../uploads/'); // Points to the uploads folder at root level
+    cb(null, './uploads/'); // Fixed: use relative path from project root
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
@@ -23,7 +23,13 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
-const upload = multer({ storage, fileFilter });
+const upload = multer({ 
+  storage, 
+  fileFilter,
+  limits: { 
+    fileSize: 10 * 1024 * 1024 // 10MB limit
+  }
+});
 
 // Upload route with error handling
 router.post('/', auth, (req, res) => {

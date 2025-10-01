@@ -18,12 +18,19 @@ passport.deserializeUser(async (id, done) => {
 });
 
 // Google OAuth Strategy
+const callbackURL = process.env.NODE_ENV === 'production' 
+  ? process.env.GOOGLE_CALLBACK_URL_PROD || "https://stegosense.vercel.app/api/auth/google/callback"
+  : process.env.GOOGLE_CALLBACK_URL || "http://localhost:5001/api/auth/google/callback";
+
+console.log('🔧 Google OAuth Callback URL:', callbackURL);
+console.log('🔧 Google Client ID:', process.env.GOOGLE_CLIENT_ID);
+console.log('🔧 Google Client Secret:', process.env.GOOGLE_CLIENT_SECRET ? 'Set' : 'Not Set');
+
 passport.use(new GoogleStrategy({
   clientID: process.env.GOOGLE_CLIENT_ID,
   clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-  callbackURL: process.env.NODE_ENV === 'production' 
-    ? "https://stegosense-production.up.railway.app/api/auth/google/callback"
-    : "http://localhost:5001/api/auth/google/callback"
+  callbackURL: callbackURL,
+  scope: ['profile', 'email']
 }, async (accessToken, refreshToken, profile, done) => {
   try {
     // Check if user already exists with this Google ID

@@ -5,6 +5,8 @@ const User = require('../models/User');
 // Helper function to log history
 const logHistory = async (userId, action, description, metadata = {}, req = null) => {
   try {
+    console.log('logHistory called:', { userId, action, description });
+    
     const historyData = {
       userId,
       action,
@@ -16,8 +18,10 @@ const logHistory = async (userId, action, description, metadata = {}, req = null
       }
     };
 
+    console.log('Creating history entry:', historyData);
     const history = new History(historyData);
     await history.save();
+    console.log('History saved successfully:', history._id);
     return history;
   } catch (error) {
     console.error('Error logging history:', error);
