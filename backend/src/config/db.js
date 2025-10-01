@@ -2,7 +2,14 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
+    // Support both MONGO_URI (local) and MONGODB_URI (Railway)
+    const mongoUri = process.env.MONGO_URI || process.env.MONGODB_URI;
+    
+    if (!mongoUri) {
+      throw new Error('MongoDB URI not found in environment variables');
+    }
+    
+    await mongoose.connect(mongoUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     });
