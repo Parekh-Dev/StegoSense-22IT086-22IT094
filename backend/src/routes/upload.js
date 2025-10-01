@@ -4,10 +4,12 @@ const path = require('path');
 const auth = require('../middleware/authMiddleware');
 const { logHistory } = require('../controllers/historyController');
 
-// Set storage engine
+// Set storage engine with environment-aware path
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, '/uploads/'); // Fixed: use absolute path that matches Dockerfile
+    // Use absolute path for production (Docker), relative for development
+    const uploadPath = process.env.NODE_ENV === 'production' ? '/uploads/' : './uploads/';
+    cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
@@ -33,7 +35,10 @@ const upload = multer({
 
 // Upload route with error handling
 router.post('/', auth, (req, res) => {
+  const uploadPath = process.env.NODE_ENV === 'production' ? '/uploads/' : './uploads/';
   console.log('🔧 Upload Debug:');
+  console.log('NODE_ENV:', process.env.NODE_ENV);
+  console.log('Upload path:', uploadPath);
   console.log('Request headers:', req.headers['content-type']);
   console.log('Request body keys:', req.body ? Object.keys(req.body) : 'undefined');
   console.log('Request files:', req.files || 'undefined');
