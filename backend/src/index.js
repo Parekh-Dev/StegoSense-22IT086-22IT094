@@ -1,7 +1,20 @@
+// Force environment logging before anything else
+console.log('🔧 ENVIRONMENT DEBUG START:');
+console.log('NODE_ENV:', process.env.NODE_ENV || 'undefined');
+console.log('PORT:', process.env.PORT || 'undefined');
+console.log('MONGO_URI:', process.env.MONGO_URI ? 'Set' : 'Not Set');
+console.log('MONGODB_URI:', process.env.MONGODB_URI ? 'Set' : 'Not Set');
+console.log('JWT_SECRET:', process.env.JWT_SECRET ? 'Set' : 'Not Set');
+console.log('🔧 ENVIRONMENT DEBUG END');
+
 // Only load .env file in development
 if (process.env.NODE_ENV !== 'production') {
+  console.log('Loading .env file for development...');
   require('dotenv').config();
+} else {
+  console.log('Production mode - skipping .env file');
 }
+
 const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
@@ -9,14 +22,6 @@ const morgan = require('morgan');
 const session = require('express-session');
 const passport = require('passport');
 const connectDB = require('./config/db');
-
-// Debug environment variables
-console.log('🔧 Environment Debug:');
-console.log('NODE_ENV:', process.env.NODE_ENV);
-console.log('PORT:', process.env.PORT);
-console.log('MONGO_URI:', process.env.MONGO_URI ? 'Set' : 'Not Set');
-console.log('MONGODB_URI:', process.env.MONGODB_URI ? 'Set' : 'Not Set');
-console.log('JWT_SECRET:', process.env.JWT_SECRET ? 'Set' : 'Not Set');
 
 // Initialize passport configuration
 require('./config/passport');

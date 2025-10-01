@@ -15,6 +15,9 @@ COPY src/ ./src/
 # Create uploads directory
 RUN mkdir -p /uploads
 
+# Set production environment
+ENV NODE_ENV=production
+
 # Expose port
 EXPOSE 5001
 
