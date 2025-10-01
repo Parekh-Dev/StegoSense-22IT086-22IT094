@@ -35,12 +35,6 @@ const upload = multer({
 
 // Upload route with error handling
 router.post('/', auth, (req, res) => {
-  const uploadPath = './uploads/';
-  console.log('🔧 Upload Debug:');
-  console.log('NODE_ENV:', process.env.NODE_ENV);
-  console.log('Upload path:', uploadPath);
-  console.log('Request headers:', req.headers['content-type']);
-  
   const uploadSingle = upload.single('image');
   
   uploadSingle(req, res, async (err) => {
