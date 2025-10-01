@@ -89,12 +89,12 @@ exports.googleAuthSuccess = async (req, res) => {
       
       // Environment-aware frontend URL
       const frontendURL = process.env.NODE_ENV === 'production' 
-        ? process.env.FRONTEND_URL_PROD || "https://stego-sense.vercel.app"
-        : process.env.FRONTEND_URL || "http://localhost:3000";
+        ? (process.env.FRONTEND_URL_PROD || "https://stego-sense.vercel.app")
+        : (process.env.FRONTEND_URL || "http://localhost:3000");
       
       console.log('🔧 Google OAuth Debug:');
       console.log('NODE_ENV:', process.env.NODE_ENV);
-      console.log('FRONTEND_URL_PROD:', process.env.FRONTEND_URL_PROD);
+      console.log('FRONTEND_URL_PROD:', process.env.FRONTEND_URL_PROD || 'UNDEFINED');
       console.log('Calculated frontendURL:', frontendURL);
       
       // Redirect to frontend with token
