@@ -74,7 +74,7 @@ app.use('/api/history', historyRoutes);
 
 // Basic test route
 app.get('/', (req, res) => {
-  res.send('StegoSense Backend Running 🚀');
+  res.send('StegoSense Backend Running 🚀 - Updated Version 2.0');
 });
 
 // Start server
