@@ -35,8 +35,8 @@ const upload = multer({
 router.post('/', auth, (req, res) => {
   console.log('🔧 Upload Debug:');
   console.log('Request headers:', req.headers['content-type']);
-  console.log('Request body keys:', Object.keys(req.body));
-  console.log('Request files:', req.files);
+  console.log('Request body keys:', req.body ? Object.keys(req.body) : 'undefined');
+  console.log('Request files:', req.files || 'undefined');
   
   const uploadSingle = upload.single('image');
   
