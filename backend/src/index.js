@@ -74,7 +74,14 @@ app.use('/api/history', historyRoutes);
 
 // Basic test route
 app.get('/', (req, res) => {
-  res.send('StegoSense Backend Running 🚀 - Updated Version 2.0');
+  res.json({
+    message: 'StegoSense Backend Running 🚀 - Updated Version 3.0',
+    NODE_ENV: process.env.NODE_ENV,
+    MONGODB_URI_SET: !!process.env.MONGODB_URI,
+    FRONTEND_URL_PROD_SET: !!process.env.FRONTEND_URL_PROD,
+    FRONTEND_URL_PROD_VALUE: process.env.FRONTEND_URL_PROD,
+    timestamp: new Date().toISOString()
+  });
 });
 
 // Start server

@@ -12,8 +12,8 @@ RUN npm install
 # Copy source code
 COPY src/ ./src/
 
-# Create uploads directory
-RUN mkdir -p /uploads
+# Create uploads directory in the working directory
+RUN mkdir -p ./uploads
 
 # Set production environment
 ENV NODE_ENV=production

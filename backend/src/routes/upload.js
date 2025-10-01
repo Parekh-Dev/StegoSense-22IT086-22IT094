@@ -7,8 +7,8 @@ const { logHistory } = require('../controllers/historyController');
 // Set storage engine with environment-aware path
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    // Use absolute path for production (Docker), relative for development
-    const uploadPath = process.env.NODE_ENV === 'production' ? '/uploads/' : './uploads/';
+    // Use consistent relative path for both development and production
+    const uploadPath = './uploads/';
     cb(null, uploadPath);
   },
   filename: function (req, file, cb) {
@@ -35,13 +35,11 @@ const upload = multer({
 
 // Upload route with error handling
 router.post('/', auth, (req, res) => {
-  const uploadPath = process.env.NODE_ENV === 'production' ? '/uploads/' : './uploads/';
+  const uploadPath = './uploads/';
   console.log('🔧 Upload Debug:');
   console.log('NODE_ENV:', process.env.NODE_ENV);
   console.log('Upload path:', uploadPath);
   console.log('Request headers:', req.headers['content-type']);
-  console.log('Request body keys:', req.body ? Object.keys(req.body) : 'undefined');
-  console.log('Request files:', req.files || 'undefined');
   
   const uploadSingle = upload.single('image');
   
