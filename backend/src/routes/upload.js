@@ -7,7 +7,7 @@ const { logHistory } = require('../controllers/historyController');
 // Set storage engine
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './uploads/'); // Fixed: use relative path from project root
+    cb(null, '/uploads/'); // Fixed: use absolute path that matches Dockerfile
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + path.extname(file.originalname));
@@ -33,10 +33,16 @@ const upload = multer({
 
 // Upload route with error handling
 router.post('/', auth, (req, res) => {
+  console.log('🔧 Upload Debug:');
+  console.log('Request headers:', req.headers['content-type']);
+  console.log('Request body keys:', Object.keys(req.body));
+  console.log('Request files:', req.files);
+  
   const uploadSingle = upload.single('image');
   
   uploadSingle(req, res, async (err) => {
     if (err instanceof multer.MulterError) {
+      console.error('Multer error:', err);
       if (err.code === 'UNEXPECTED_FIELD') {
         return res.status(400).json({ 
           msg: 'Unexpected field. Please use "image" as the field name for file upload.' 
@@ -44,12 +50,16 @@ router.post('/', auth, (req, res) => {
       }
       return res.status(400).json({ msg: err.message });
     } else if (err) {
+      console.error('Upload error:', err);
       return res.status(400).json({ msg: err.message });
     }
 
     if (!req.file) {
+      console.error('No file in request');
       return res.status(400).json({ msg: 'No file uploaded. Please select an image file.' });
     }
+
+    console.log('✅ File uploaded successfully:', req.file.filename);
 
     try {
       // Log file upload activity
