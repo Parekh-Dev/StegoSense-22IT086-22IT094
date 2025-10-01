@@ -1,18 +1,23 @@
-// Force environment logging before anything else
+// Railway might not be using Docker, so let's be more explicit
+console.log('🚀 STARTING APPLICATION...');
 console.log('🔧 ENVIRONMENT DEBUG START:');
 console.log('NODE_ENV:', process.env.NODE_ENV || 'undefined');
 console.log('PORT:', process.env.PORT || 'undefined');
-console.log('MONGO_URI:', process.env.MONGO_URI ? 'Set' : 'Not Set');
-console.log('MONGODB_URI:', process.env.MONGODB_URI ? 'Set' : 'Not Set');
+console.log('MONGO_URI length:', process.env.MONGO_URI ? process.env.MONGO_URI.length : 0);
+console.log('MONGODB_URI length:', process.env.MONGODB_URI ? process.env.MONGODB_URI.length : 0);
 console.log('JWT_SECRET:', process.env.JWT_SECRET ? 'Set' : 'Not Set');
 console.log('🔧 ENVIRONMENT DEBUG END');
 
-// Only load .env file in development
-if (process.env.NODE_ENV !== 'production') {
-  console.log('Loading .env file for development...');
-  require('dotenv').config();
-} else {
-  console.log('Production mode - skipping .env file');
+// Try to load dotenv but don't fail if it doesn't work
+try {
+  if (process.env.NODE_ENV !== 'production') {
+    console.log('Loading .env file for development...');
+    require('dotenv').config();
+  } else {
+    console.log('Production mode - Railway should provide env vars');
+  }
+} catch (err) {
+  console.log('Dotenv loading skipped:', err.message);
 }
 
 const express = require('express');
