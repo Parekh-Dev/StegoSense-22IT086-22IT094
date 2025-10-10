@@ -7,6 +7,7 @@ services:
       - ./backend/.env
     volumes:
       - ./uploads:/uploads
+      - ../ML:/app/ML  # Mount ML directory inside container
 
   frontend:
     build: ./frontend

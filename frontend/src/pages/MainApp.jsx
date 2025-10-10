@@ -16,6 +16,7 @@ const MainApp = () => {
   const [dragActive, setDragActive] = useState(false)
   const [analysisHistory, setAnalysisHistory] = useState([])
   const [showLogoutModal, setShowLogoutModal] = useState(false)
+  const [detectionMethod, setDetectionMethod] = useState("cnn-rnn") // Fixed to CNN+RNN for video support
   const navigate = useNavigate()
   const token = localStorage.getItem("token")
 
@@ -81,8 +82,8 @@ const MainApp = () => {
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0]
-    if (selectedFile && !selectedFile.type.startsWith("image/")) {
-      setError("Please select a valid image file")
+    if (selectedFile && !selectedFile.type.startsWith("image/") && !selectedFile.type.startsWith("video/")) {
+      setError("Please select a valid image or video file")
       setFile(null)
       setFilePreview(null)
       return
@@ -125,8 +126,8 @@ const MainApp = () => {
 
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       const droppedFile = e.dataTransfer.files[0]
-      if (!droppedFile.type.startsWith("image/")) {
-        setError("Please select a valid image file")
+      if (!droppedFile.type.startsWith("image/") && !droppedFile.type.startsWith("video/")) {
+        setError("Please select a valid image or video file")
         setFile(null)
         setFilePreview(null)
         return
@@ -169,7 +170,7 @@ const MainApp = () => {
 
   const handleUpload = async () => {
     if (!file) {
-      setError("Please select an image file first")
+      setError("Please select an image or video file first")
       return
     }
 
@@ -179,18 +180,30 @@ const MainApp = () => {
     setLoading(true)
     setError("")
     try {
-      const res = await axios.post(API_ENDPOINTS.UPLOAD, formData, {
+      // Always use CNN+RNN endpoint
+      const res = await axios.post(API_ENDPOINTS.CNN_RNN_DETECT, formData, {
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "multipart/form-data" },
       })
       
+      // CNN+RNN returns wrapped result
+      const resultData = {
+        isStego: res.data.result.isStego,
+        confidence: res.data.result.confidence || 95, // Include confidence for history (even if not displayed)
+        filename: res.data.result.filename,
+        originalName: file?.name,
+        message: res.data.result.isStego ? "Steganography detected" : "No steganography detected",
+        details: res.data.result
+      }
+      
       // Add preview URL to result for display in results section
       const resultWithPreview = {
-        ...res.data.result,
-        previewUrl: filePreview // Keep the preview URL for results display
+        ...resultData,
+        previewUrl: filePreview, // Keep the preview URL for results display
+        detectionMethod: "cnn-rnn"
       }
       
       setResult(resultWithPreview)
-      saveToHistory(res.data.result)
+      saveToHistory(resultData)
       
       // Clean up file but keep preview for results
       setFile(null)
@@ -257,7 +270,9 @@ const MainApp = () => {
         {/* Title */}
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-2">Steganography Analysis</h2>
-          <p className="text-gray-600">Upload an image to detect hidden steganographic content</p>
+          <p className="text-gray-600">
+            Upload an image or video to detect hidden steganographic content using advanced CNN+RNN analysis
+          </p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -276,8 +291,12 @@ const MainApp = () => {
                 {loading ? (
                   <div className="space-y-4">
                     <div className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
-                    <h3 className="text-xl font-semibold text-gray-900">Analyzing Image...</h3>
-                    <p className="text-gray-600">Please wait while we process your image</p>
+                    <h3 className="text-xl font-semibold text-gray-900">
+                      Advanced CNN+RNN Analysis in Progress...
+                    </h3>
+                    <p className="text-gray-600">
+                      Please wait while we run advanced deep learning analysis (may take 30-90 seconds)
+                    </p>
                   </div>
                 ) : (
                   <div className="space-y-6">
@@ -299,21 +318,29 @@ const MainApp = () => {
 
                         <div>
                           <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                            Drop your image here or click to browse
+                            Drop your file here or click to browse
                           </h3>
                           <p className="text-gray-600 text-sm">
-                            Supports PNG, JPEG, GIF and other common image formats
+                            Supports PNG, JPEG, GIF, MP4, AVI and other common formats
                           </p>
                         </div>
                       </>
                     ) : (
                       <>
-                        <div className="relative">
+                      <div className="relative">
+                        {file?.type?.startsWith('video/') ? (
+                          <video
+                            src={filePreview}
+                            className="max-w-full max-h-64 mx-auto rounded-lg shadow-md object-contain"
+                            controls
+                          />
+                        ) : (
                           <img
                             src={filePreview}
                             alt="Preview"
                             className="max-w-full max-h-64 mx-auto rounded-lg shadow-md object-contain"
                           />
+                        )}
                           <button
                             onClick={() => {
                               // Clean up preview URL
@@ -354,7 +381,7 @@ const MainApp = () => {
 
                     <input
                       type="file"
-                      accept="image/*"
+                      accept="image/*,video/*"
                       onChange={handleFileChange}
                       className="hidden"
                       id="file-input"
@@ -371,7 +398,7 @@ const MainApp = () => {
                               d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"
                             />
                           </svg>
-                          {filePreview ? "Choose Different Image" : "Choose Image File"}
+                          {filePreview ? "Choose Different File" : "Choose Image or Video"}
                         </div>
                       </label>
 
@@ -380,7 +407,7 @@ const MainApp = () => {
                         disabled={loading || !file}
                         className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                       >
-                        Upload & Analyze
+                        Analyze for Steganography
                       </button>
                     </div>
                   </div>
@@ -455,7 +482,7 @@ const MainApp = () => {
                           }
                         </p>
                         <p className="text-xs text-gray-500">
-                          {new Date(item.timestamp).toLocaleDateString()} • {item.confidence}% confidence
+                          {new Date(item.timestamp).toLocaleDateString()}
                         </p>
                       </div>
                       <span
@@ -490,17 +517,27 @@ const MainApp = () => {
           <div className="mt-8 bg-white rounded-2xl shadow-lg p-8">
             <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">Analysis Results</h3>
 
-            {/* Image Preview Section */}
+            {/* Image/Video Preview Section */}
             {result.previewUrl && (
               <div className="mb-8">
-                <h4 className="text-lg font-medium text-gray-700 mb-4 text-center">Analyzed Image</h4>
+                <h4 className="text-lg font-medium text-gray-700 mb-4 text-center">
+                  Analyzed Content
+                </h4>
                 <div className="flex justify-center">
                   <div className="relative">
-                    <img
-                      src={result.previewUrl}
-                      alt={result.originalName || result.filename}
-                      className="max-w-md max-h-80 rounded-lg shadow-lg object-contain"
-                    />
+                    {result.previewUrl.includes('video') || file?.type?.startsWith('video/') ? (
+                      <video
+                        src={result.previewUrl}
+                        className="max-w-md max-h-80 rounded-lg shadow-lg object-contain"
+                        controls
+                      />
+                    ) : (
+                      <img
+                        src={result.previewUrl}
+                        alt={result.originalName || result.filename}
+                        className="max-w-md max-h-80 rounded-lg shadow-lg object-contain"
+                      />
+                    )}
                     <div className={`absolute top-2 right-2 px-3 py-1 rounded-full text-sm font-semibold ${
                       result.isStego ? "bg-red-500 text-white" : "bg-green-500 text-white"
                     }`}>
@@ -511,7 +548,7 @@ const MainApp = () => {
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div className="text-center p-6 bg-gray-50 rounded-xl">
                 <h4 className="text-sm font-medium text-gray-600 mb-2">Filename</h4>
                 <p className="text-lg font-semibold text-gray-900 break-words">
@@ -528,19 +565,6 @@ const MainApp = () => {
                 >
                   {result.isStego ? "YES" : "NO"}
                 </span>
-              </div>
-
-              <div className="text-center p-6 bg-gray-50 rounded-xl">
-                <h4 className="text-sm font-medium text-gray-600 mb-2">Confidence Level</h4>
-                <div className="text-3xl font-bold text-gray-900 mb-2">{result.confidence}%</div>
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className={`h-2 rounded-full ${
-                      result.confidence > 70 ? "bg-green-500" : result.confidence > 40 ? "bg-yellow-500" : "bg-red-500"
-                    }`}
-                    style={{ width: `${result.confidence}%` }}
-                  ></div>
-                </div>
               </div>
 
               <div className="text-center p-6 bg-gray-50 rounded-xl">

@@ -87,11 +87,14 @@ exports.googleAuthSuccess = async (req, res) => {
         email: req.user.email 
       }, process.env.JWT_SECRET, { expiresIn: '7d' });
       
-      // Force production URL for now - Railway env vars not working properly
-      const frontendURL = "https://stego-sense.vercel.app";
+      // Use environment-based URL configuration
+      const frontendURL = process.env.NODE_ENV === 'production' 
+        ? process.env.FRONTEND_URL_PROD || "https://stego-sense.vercel.app"
+        : process.env.FRONTEND_URL || "http://localhost:3000";
       
-      console.log('🔧 Google OAuth Debug - FORCED URL:');
-      console.log('Using hardcoded frontendURL:', frontendURL);
+      console.log('🔧 Google OAuth Debug - Environment-based URL:');
+      console.log('NODE_ENV:', process.env.NODE_ENV);
+      console.log('Using frontendURL:', frontendURL);
       
       // Redirect to frontend with token
       res.redirect(`${frontendURL}/auth/success?token=${token}`);

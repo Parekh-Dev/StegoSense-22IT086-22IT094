@@ -11,6 +11,7 @@ export const API_ENDPOINTS = {
     LOGOUT: `${API_BASE_URL}/api/auth/logout`,
   },
   UPLOAD: `${API_BASE_URL}/api/upload`,
+  CNN_RNN_DETECT: `${API_BASE_URL}/api/cnn-rnn-test/detect`,
   HISTORY: {
     GET: `${API_BASE_URL}/api/history`,
     STATS: `${API_BASE_URL}/api/history/stats`,

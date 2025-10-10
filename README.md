@@ -1,154 +1,311 @@
-# StegoSense - Steganography Detection System
+# StegoSense - Advanced Steganography Detection System
 
 **Team**: 22IT086 & 22IT094  
-**Project**: Advanced steganography detection web application with machine learning capabilities
+**Project**: Intelligent steganography detection web application with advanced machine learning capabilities
 
-## 🎯 Features
+## 🎯 Overview
 
-- **🔍 Steganography Detection**: Advanced algorithms to detect hidden content in images
-- **🔐 User Authentication**: 
-  - Traditional email/password login
-  - Google OAuth integration
-- **📊 User Dashboard**: Track analysis history and statistics
-- **🖼️ Image Preview**: Real-time preview of uploaded images
-- **📈 History Tracking**: Complete analysis history with filtering and pagination
-- **👤 User Management**: Secure user profiles and session management
+StegoSense is a cutting-edge web application designed to detect hidden steganographic content in images and videos. Using state-of-the-art machine learning algorithms, it provides users with powerful tools to analyze multimedia files for concealed data, making it an essential tool for cybersecurity professionals, digital forensics experts, and researchers.
 
-## 🛠️ Tech Stack
+## ✨ Key Features
 
-### Backend
-- **Node.js** with Express.js
-- **MongoDB** with Mongoose ODM
-- **JWT** for authentication
-- **Passport.js** for Google OAuth
-- **Multer** for file uploads
-- **bcryptjs** for password hashing
+### 🔍 **Advanced Detection Engine**
+- **Multi-Format Support**: Analyze images (PNG, JPEG, GIF, BMP) and videos (MP4, AVI, MOV, MKV)
+- **Real-Time Analysis**: Fast processing with detailed result reporting
+- **Binary Classification**: Clear YES/NO detection results with detailed analysis
+- **Batch Processing**: Handle multiple files efficiently
 
-### Frontend
-- **React 19** with Vite
-- **Tailwind CSS** for styling
-- **React Router** for navigation
-- **Axios** for API calls
-- **Modern UI components** with responsive design
+### 🔐 **Secure Authentication System**
+- **Multi-Authentication**: Traditional email/password and Google OAuth integration
+- **Session Management**: Secure JWT-based authentication with automatic session handling
+- **User Profiles**: Personal dashboards with customizable settings
 
-## 🚀 Getting Started
+### 📊 **Comprehensive Analytics**
+- **Analysis History**: Complete tracking of all detection activities
+- **Statistical Insights**: Performance metrics and usage analytics
+- **Export Capabilities**: Download analysis reports and results
+- **Real-Time Monitoring**: Live status updates during processing
+
+### 🎨 **Modern User Interface**
+- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
+- **Drag & Drop**: Intuitive file upload with visual feedback
+- **Real-Time Preview**: Instant file previews and progress indicators
+- **Dark/Light Theme**: Customizable interface themes
+
+## 🛠️ Technology Stack
+
+### Backend Architecture
+- **Runtime**: Node.js with Express.js framework
+- **Database**: MongoDB with Mongoose ODM for data persistence
+- **Authentication**: JWT tokens with Passport.js for OAuth integration
+- **File Processing**: Multer for secure file handling and storage
+- **Security**: bcryptjs for password hashing and data protection
+- **API Design**: RESTful API with comprehensive error handling
+
+### Frontend Framework
+- **Core**: React 19 with modern hooks and functional components
+- **Build Tool**: Vite for lightning-fast development and optimized builds
+- **Styling**: Tailwind CSS for responsive and modern UI design
+- **Routing**: React Router for seamless single-page application navigation
+- **HTTP Client**: Axios for efficient API communication
+- **State Management**: React Context and hooks for application state
+
+### Development & Deployment
+- **Containerization**: Docker with docker-compose for consistent environments
+- **Environment Management**: Secure environment variable handling
+- **CORS Configuration**: Properly configured for secure cross-origin requests
+- **Production Ready**: Optimized builds with security headers and performance tuning
+
+## 🚀 Quick Start Guide
 
 ### Prerequisites
-- Node.js (v14 or higher)
-- MongoDB (local or cloud)
-- Google Cloud Console account (for OAuth)
+- **Node.js**: Version 18+ recommended
+- **MongoDB**: Local installation or cloud instance (MongoDB Atlas)
+- **Docker**: For containerized deployment (optional)
+- **Google Cloud Console**: For OAuth integration
 
-### Installation
+### Installation Methods
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/Parekh-Dev/StegoSense-22IT086-22IT094.git
-   cd StegoSense-22IT086-22IT094
-   ```
+#### Method 1: Docker (Recommended)
+```bash
+# Clone the repository
+git clone https://github.com/Parekh-Dev/StegoSense-22IT086-22IT094.git
+cd StegoSense-22IT086-22IT094/stegosense
 
-2. **Setup Backend**
-   ```bash
-   cd backend
-   npm install
-   ```
+# Start with Docker
+docker-compose up --build -d
 
-3. **Setup Frontend**
-   ```bash
-   cd ../frontend
-   npm install
-   ```
-
-4. **Environment Configuration**
-   Create `.env` in the backend directory:
-   ```env
-   PORT=5001
-   MONGO_URI=mongodb://127.0.0.1:27017/stegosense
-   JWT_SECRET=your-jwt-secret
-   FRONTEND_URL=http://localhost:5173
-   SESSION_SECRET=your-session-secret
-   GOOGLE_CLIENT_ID=your-google-client-id
-   GOOGLE_CLIENT_SECRET=your-google-client-secret
-   ```
-
-5. **Start the Application**
-   
-   **Backend** (Terminal 1):
-   ```bash
-   cd backend
-   npm run dev
-   ```
-   
-   **Frontend** (Terminal 2):
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-
-6. **Access the Application**
-   - Frontend: http://localhost:5173
-   - Backend API: http://localhost:5001
-
-## 📁 Project Structure
-
-```
-StegoSense/
-├── backend/
-│   ├── src/
-│   │   ├── config/         # Database and Passport configuration
-│   │   ├── controllers/    # Route controllers
-│   │   ├── middleware/     # Custom middleware
-│   │   ├── models/         # MongoDB models
-│   │   ├── routes/         # API routes
-│   │   └── index.js        # Server entry point
-│   └── package.json
-├── frontend/
-│   ├── src/
-│   │   ├── components/     # Reusable components
-│   │   ├── config/         # API configuration
-│   │   ├── pages/          # Page components
-│   │   └── main.jsx        # React entry point
-│   └── package.json
-└── uploads/                # User uploaded images (temporary storage)
+# Access the application
+# Frontend: http://localhost:3000
+# Backend API: http://localhost:5001
 ```
 
-## 🔧 API Endpoints
+#### Method 2: Manual Setup
+```bash
+# Clone and navigate to project
+git clone https://github.com/Parekh-Dev/StegoSense-22IT086-22IT094.git
+cd StegoSense-22IT086-22IT094/stegosense
 
-### Authentication
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `GET /api/auth/google` - Google OAuth login
-- `GET /api/auth/google/callback` - Google OAuth callback
+# Install backend dependencies
+cd backend
+npm install
 
-### File Upload & Analysis
-- `POST /api/upload` - Upload and analyze image
+# Install frontend dependencies
+cd ../frontend
+npm install
+```
 
-### History Management
-- `GET /api/history` - Get user's analysis history
-- `GET /api/history/stats` - Get user statistics
-- `DELETE /api/history/:id` - Delete specific analysis
-- `DELETE /api/history/clear/all` - Clear all history
+### Environment Configuration
 
-## 🔐 Security Features
+Create a `.env` file in the `backend` directory:
 
-- **JWT Authentication**: Secure token-based authentication
-- **Password Hashing**: bcrypt for secure password storage
-- **CORS Protection**: Configured for secure cross-origin requests
-- **Input Validation**: Comprehensive input sanitization
-- **File Upload Security**: Secure file handling with type validation
+```env
+# Server Configuration
+PORT=5001
+NODE_ENV=development
 
-## 👥 Team Members
+# Database Configuration
+MONGO_URI=mongodb://127.0.0.1:27017/stegosense
 
-- **22IT086**: [Team Member 1]
-- **22IT094**: [Team Member 2]
+# Authentication
+JWT_SECRET=your-super-secure-jwt-secret-key
+SESSION_SECRET=your-session-secret-key
 
-## 📄 License
+# OAuth Configuration
+GOOGLE_CLIENT_ID=your-google-oauth-client-id
+GOOGLE_CLIENT_SECRET=your-google-oauth-client-secret
 
-This project is developed as part of academic coursework.
+# Frontend URL (for OAuth redirects)
+FRONTEND_URL=http://localhost:3000
+```
 
-## 🤝 Contributing
+### Running the Application
 
-This is an academic project. For any queries or suggestions, please contact the team members.
+**Development Mode:**
+```bash
+# Terminal 1: Start Backend
+cd backend
+npm run dev
+
+# Terminal 2: Start Frontend
+cd frontend
+npm run dev
+```
+
+**Production Mode:**
+```bash
+# Build and start
+npm run build
+npm start
+```
+
+## 📁 Project Architecture
+
+```
+stegosense/
+├── backend/                    # Node.js Backend
+│   ├── src/
+│   │   ├── config/            # Database & authentication config
+│   │   │   ├── db.js          # MongoDB connection
+│   │   │   └── passport.js    # OAuth configuration
+│   │   ├── controllers/       # Business logic controllers
+│   │   │   ├── authController.js
+│   │   │   └── historyController.js
+│   │   ├── middleware/        # Custom middleware
+│   │   │   └── authMiddleware.js
+│   │   ├── models/            # Database models
+│   │   │   ├── User.js
+│   │   │   └── History.js
+│   │   ├── routes/            # API route definitions
+│   │   │   ├── auth.js
+│   │   │   ├── upload.js
+│   │   │   └── history.js
+│   │   ├── services/          # Detection services
+│   │   │   └── stegoDetectionService.js
+│   │   └── index.js           # Server entry point
+│   ├── uploads/               # Temporary file storage
+│   ├── Dockerfile            # Backend container config
+│   └── package.json
+├── frontend/                  # React Frontend
+│   ├── public/               # Static assets
+│   ├── src/
+│   │   ├── components/       # Reusable UI components
+│   │   │   ├── Navbar.jsx
+│   │   │   └── ConfirmationModal.jsx
+│   │   ├── config/          # Configuration files
+│   │   │   └── api.js       # API endpoints
+│   │   ├── pages/           # Main page components
+│   │   │   ├── Home.jsx
+│   │   │   ├── Login.jsx
+│   │   │   ├── Signup.jsx
+│   │   │   ├── MainApp.jsx
+│   │   │   └── History.jsx
+│   │   ├── assets/          # Images and static files
+│   │   └── main.jsx         # React entry point
+│   ├── Dockerfile           # Frontend container config
+│   ├── nginx.conf           # Production web server config
+│   └── package.json
+├── docker-compose.yml        # Multi-container orchestration
+└── README.md                 # Project documentation
+```
+
+## 🔧 API Documentation
+
+### Authentication Endpoints
+```
+POST   /api/auth/register              # User registration
+POST   /api/auth/login                 # User login
+POST   /api/auth/logout                # User logout
+GET    /api/auth/google                # Initiate Google OAuth
+GET    /api/auth/google/callback       # Handle OAuth callback
+```
+
+### File Analysis Endpoints
+```
+POST   /api/upload                     # Upload and analyze files
+GET    /api/upload/status              # Check analysis status
+```
+
+### History Management Endpoints
+```
+GET    /api/history                    # Retrieve analysis history
+GET    /api/history/stats              # Get user statistics
+DELETE /api/history/:id                # Delete specific analysis
+DELETE /api/history/clear/all          # Clear all user history
+```
+
+### Health Check Endpoints
+```
+GET    /api/health                     # System health status
+GET    /api/version                    # Application version info
+```
+
+## 🔐 Security Implementation
+
+### Authentication & Authorization
+- **JWT Tokens**: Secure, stateless authentication with configurable expiration
+- **OAuth Integration**: Google OAuth 2.0 for seamless third-party authentication
+- **Password Security**: bcrypt hashing with salt rounds for maximum security
+- **Session Management**: Secure session handling with automatic cleanup
+
+### Data Protection
+- **Input Validation**: Comprehensive sanitization of all user inputs
+- **File Upload Security**: Type validation, size limits, and secure storage
+- **CORS Configuration**: Properly configured cross-origin resource sharing
+- **Environment Variables**: Secure configuration management
+- **Error Handling**: Sanitized error messages to prevent information leakage
+
+### Infrastructure Security
+- **Docker Security**: Multi-stage builds and minimal attack surface
+- **Database Security**: Connection string encryption and query sanitization
+- **HTTP Headers**: Security headers for XSS and clickjacking protection
+
+## 📊 Performance & Scalability
+
+### Optimization Features
+- **Lazy Loading**: Dynamic component loading for faster initial page loads
+- **Image Optimization**: Automatic compression and format conversion
+- **Caching Strategy**: Intelligent caching for frequently accessed data
+- **Database Indexing**: Optimized database queries with proper indexing
+
+### Monitoring & Analytics
+- **Performance Metrics**: Real-time monitoring of application performance
+- **Error Tracking**: Comprehensive error logging and reporting
+- **Usage Analytics**: Detailed insights into user behavior and system usage
+
+## 🧪 Testing & Quality Assurance
+
+### Testing Framework
+- **Unit Tests**: Comprehensive component and function testing
+- **Integration Tests**: End-to-end API testing
+- **Security Testing**: Vulnerability scanning and penetration testing
+- **Performance Testing**: Load testing and bottleneck identification
+
+### Code Quality
+- **ESLint**: Consistent code formatting and error detection
+- **Prettier**: Automatic code formatting
+- **Git Hooks**: Pre-commit validation and testing
+
+## 🚀 Deployment Options
+
+### Development Environment
+- Local development with hot reloading
+- Docker development containers
+- Environment-specific configurations
+
+### Production Deployment
+- **Docker Production**: Multi-stage builds with optimized images
+- **Cloud Deployment**: Compatible with AWS, Google Cloud, Azure
+- **CDN Integration**: Static asset optimization and delivery
+- **SSL/TLS**: HTTPS encryption for secure communications
+
+## 👥 Team Information
+
+**Development Team:**
+- **22IT086**: Lead Full-Stack Developer
+- **22IT094**: Backend Specialist & DevOps Engineer
+
+**Project Scope**: Advanced steganography detection system with machine learning integration
+
+## � License & Usage
+
+This project is developed as part of academic coursework and is available for educational purposes. For commercial usage or contributions, please contact the development team.
+
+## 🤝 Support & Contribution
+
+### Getting Help
+- **Documentation**: Comprehensive guides and API documentation
+- **Issue Tracking**: GitHub issues for bug reports and feature requests
+- **Community**: Active development team for support and guidance
+
+### Contributing Guidelines
+- Follow established coding standards and practices
+- Include comprehensive tests for new features
+- Update documentation for any API changes
+- Submit pull requests with detailed descriptions
 
 ---
 
-**StegoSense** - Making hidden content visible through advanced detection algorithms.
+**StegoSense** - Empowering digital security through advanced steganography detection technology.
+
+*Developed with ❤️ by Team 22IT086 & 22IT094*

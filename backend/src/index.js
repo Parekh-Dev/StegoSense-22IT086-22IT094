@@ -52,7 +52,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Other middleware
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+      "script-src": ["'self'", "'unsafe-inline'"],
+      "script-src-attr": ["'unsafe-inline'"]
+    }
+  }
+}));
 app.use(cors({
   origin: [
     'http://localhost:5173',
@@ -68,9 +76,11 @@ app.use(express.json());
 const authRoutes = require('./routes/auth');
 const uploadRoutes = require('./routes/upload');
 const historyRoutes = require('./routes/history');
+const cnnRnnTestRoutes = require('./routes/cnnRnnTest'); // New CNN+RNN test route
 app.use('/api/auth', authRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/history', historyRoutes);
+app.use('/api/cnn-rnn-test', cnnRnnTestRoutes); // New CNN+RNN testing endpoint
 
 // Basic test route
 app.get('/', (req, res) => {
@@ -82,6 +92,13 @@ app.get('/', (req, res) => {
     FRONTEND_URL_PROD_VALUE: process.env.FRONTEND_URL_PROD,
     timestamp: new Date().toISOString()
   });
+});
+
+// Serve the test HTML page
+app.get('/test', (req, res) => {
+  const path = require('path');
+  const testFilePath = path.join(__dirname, '../../../test_upload.html');
+  res.sendFile(testFilePath);
 });
 
 // Start server
